@@ -5,6 +5,7 @@ import { AuthContext } from "./authContextDef";
 
 export default function AuthProvider( { children } : { children: ReactNode }) {
     const [neonUser, setNeonUser] = useState<User | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         async function loadUser() {
@@ -14,17 +15,20 @@ export default function AuthProvider( { children } : { children: ReactNode }) {
                     setNeonUser(result.data.user);
                 } else {
                     setNeonUser(null);
-                }
+                } 
             } catch {
+                   setNeonUser(null);
+                }
 
-                setNeonUser(null);
+                finally {
+                    setIsLoading(false);
                 }
             }
             loadUser();
     }, []);
 
     return (
-        <AuthContext.Provider value={{user: neonUser}}> {children}</AuthContext.Provider>
+        <AuthContext.Provider value={{user: neonUser, isLoading }}> {children}</AuthContext.Provider>
     );
 }
 
