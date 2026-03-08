@@ -3,6 +3,9 @@ import { useAuth } from "../context/useAuth";
 import { Card } from "../components/ui/Card";
 import { Select } from "../components/ui/Select";
 import { useState } from "react";
+import { Textarea } from "../components/ui/Textarea";
+import { Button } from "../components/ui/Button";
+import { ArrowRight } from "lucide-react";
 
 const goalOptions = [
   { value: "bulk", label: "Build Muscle (Bulk)" },
@@ -62,6 +65,10 @@ export default function Onboarding() {
     setFormData((prev) => ({ ...prev, [field]: value }));
   }
 
+  async function handleQuestionnaire(e: React.SubmitEvent) {
+    e.preventDefault();
+  }
+
     if (!user) {
         return <RedirectToSignIn />
         
@@ -76,7 +83,7 @@ export default function Onboarding() {
                     <Card variant="bordered">
                         <h1 className="text-2xl font-bold mb-2">Tell Us About Your Yourself</h1>
                         <p className="text-muted mb-6">Help us create the perfect plan for you</p>
-                        <form>
+                        <form onSubmit={handleQuestionnaire} className="space-y-5">
                             <Select 
                             id="goal" 
                             label="What's your primary goal?" 
@@ -111,8 +118,30 @@ export default function Onboarding() {
                             updateForm("sessionLength", e.target.value)
                             }
                             />
+
+                             <Select
+                             id="preferredSplit"
+                             label="Preferred training split"
+                             options={splitOptions}
+                             value={formData.preferredSplit}
+                             onChange={(e) => updateForm("preferredSplit", e.target.value)}
+                             />
                             </div>
 
+                            <Textarea
+                            id="injuries"
+                            label="Any injuries or limitations? (optional)"
+                            placeholder="E.g., lower back issues, shoulder impingement..."
+                            rows={3}
+                            value={formData.injuries}
+                            onChange={(e) => updateForm("injuries", e.target.value)}
+                            />
+
+                             <div className="flex gap-3 pt-2">
+                                <Button type="submit" className="flex-1 gap-2">
+                                    Generate My Plan <ArrowRight className="w-4 h-4" />
+                                </Button>
+                            </div>
 
 
                         </form>
