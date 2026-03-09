@@ -5,7 +5,7 @@ import { Select } from "../components/ui/Select";
 import { useState } from "react";
 import { Textarea } from "../components/ui/Textarea";
 import { Button } from "../components/ui/Button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Loader2 } from "lucide-react";
 import type { UserProfile } from "../types";
 
 const goalOptions = [
@@ -62,6 +62,9 @@ export default function Onboarding() {
     preferredSplit: "upper_lower",
   });
 
+  const [isGenerating, setIsGenerating] = useState(true);
+  const [error, setError] = useState("");
+  
    function updateForm(field: string, value: string) {
     setFormData((prev) => ({ ...prev, [field]: value }));
   }
@@ -79,7 +82,14 @@ export default function Onboarding() {
       preferredSplit: formData.preferredSplit as UserProfile["preferredSplit"],
     };
 
-    saveProfile(profile)
+    try {
+      await saveProfile(profile);
+      setIsGenerating(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to save profile");
+    } finally {
+      setIsGenerating(false);
+    }
   }
 
     if (!user) {
@@ -93,6 +103,7 @@ export default function Onboarding() {
                     {/* Progress Indicator */}
 
                     {/* Step 1: Questionnaire */}
+                    {!isGenerating ? (
                     <Card variant="bordered">
                         <h1 className="text-2xl font-bold mb-2">Tell Us About Your Yourself</h1>
                         <p className="text-muted mb-6">Help us create the perfect plan for you</p>
@@ -166,7 +177,11 @@ export default function Onboarding() {
 
 
                         </form>
-                    </Card>
+                    </Card> ) : (
+                      <Card>
+                        <Loader2 />
+                      </Card>
+                    )}
                     {/* Step 2: Generating */}
      
                 </div>
