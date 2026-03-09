@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
-import type { User } from "../types";
+import type { User, UserProfile } from "../types";
 import { authClient } from "../lib/auth";
+import { api } from "../lib/api";
 import { AuthContext } from "./authContextDef";
 
 export default function AuthProvider( { children } : { children: ReactNode }) {
@@ -27,8 +28,16 @@ export default function AuthProvider( { children } : { children: ReactNode }) {
             loadUser();
     }, []);
 
+    async function saveProfile(profileData: Omit<UserProfile, 'userId' | 'updatedAt'>) {
+        if (!neonUser) {
+            throw new Error("User not authenticated");
+        }
+
+        await api.saveProfile(neonUser.id, profileData);
+    }
+
     return (
-        <AuthContext.Provider value={{user: neonUser, isLoading }}> {children}</AuthContext.Provider>
+        <AuthContext.Provider value={{user: neonUser, isLoading, saveProfile }}> {children}</AuthContext.Provider>
     );
 }
 
