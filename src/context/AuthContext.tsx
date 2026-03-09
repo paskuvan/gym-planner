@@ -7,6 +7,7 @@ import { AuthContext } from "./authContextDef";
 export default function AuthProvider( { children } : { children: ReactNode }) {
     const [neonUser, setNeonUser] = useState<User | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [isGenerating, setIsGenerating] = useState(false);
 
     useEffect(() => {
         async function loadUser() {
@@ -28,17 +29,24 @@ export default function AuthProvider( { children } : { children: ReactNode }) {
             loadUser();
     }, []);
 
-    async function saveProfile(profileData: Omit<UserProfile, 'userId' | 'updatedAt'>) {
+    async function saveProfile(
+        profileData: Omit<UserProfile, 'userId' | 'updatedAt'>
+    ) {
         if (!neonUser) {
             throw new Error("User not authenticated");
         }
 
         await api.saveProfile(neonUser.id, profileData);
+        setIsGenerating(true);
     }
 
     return (
-        <AuthContext.Provider value={{user: neonUser, isLoading, saveProfile }}> {children}</AuthContext.Provider>
+        <AuthContext.Provider 
+        value={{user: neonUser, isLoading, saveProfile, isGenerating }}> 
+        {children}
+        </AuthContext.Provider>
     );
 }
+
 
 
