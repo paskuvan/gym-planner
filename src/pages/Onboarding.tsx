@@ -62,7 +62,7 @@ export default function Onboarding() {
     preferredSplit: "upper_lower",
   });
 
-  const [isGenerating, setIsGenerating] = useState(true);
+  const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState("");
   
    function updateForm(field: string, value: string) {
@@ -178,8 +178,12 @@ export default function Onboarding() {
 
                         </form>
                     </Card> ) : (
-                      <Card>
-                        <Loader2 />
+                      <Card variant="bordered" className="text-center py-16">
+                        <Loader2  className="w-12 h-12 text-[var(--color-accent)] mx-auto mb-6 animate-spin" />
+                        <h1 className="text-2xl font-bold mb-2">Creating your Plan</h1>
+                        <p className="text-[var(--color-muted)]">
+                          {" "}
+                          Our AI is building your personalized training program...</p>
                       </Card>
                     )}
                     {/* Step 2: Generating */}
