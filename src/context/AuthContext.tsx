@@ -4,10 +4,10 @@ import { authClient } from "../lib/auth";
 import { api } from "../lib/api";
 import { AuthContext } from "./authContextDef";
 
+
 export default function AuthProvider( { children } : { children: ReactNode }) {
     const [neonUser, setNeonUser] = useState<User | null>(null);
     const [isLoading, setIsLoading] = useState(true);
-    const [isGenerating, setIsGenerating] = useState(false);
 
     useEffect(() => {
         async function loadUser() {
@@ -40,9 +40,17 @@ export default function AuthProvider( { children } : { children: ReactNode }) {
         setIsGenerating(true);
     }
 
+    async function generatePlan() {
+        if (!neonUser) {
+            throw new Error("User must be authenticated to generate plan");
+        }
+
+        await api.generatePlan(neonUser.id);
+    }
+
     return (
         <AuthContext.Provider 
-        value={{user: neonUser, isLoading, saveProfile, isGenerating }}> 
+        value={{user: neonUser, isLoading, saveProfile, generatePlan }}> 
         {children}
         </AuthContext.Provider>
     );
