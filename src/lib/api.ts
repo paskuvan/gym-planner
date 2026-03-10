@@ -24,4 +24,8 @@ export const api = {
     ) => {
         return post("/profile", { userId, ...profileData });
     },
+
+    generatePlan: (userId: string) => {
+        return post("/plan/generate", { userId });
+    },
 }
