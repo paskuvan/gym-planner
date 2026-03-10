@@ -39,7 +39,7 @@ export async function generateTrainingPlan(
   const prompt = buildPrompt(normalizedProfile);
   try {
     const completion = await openai.chat.completions.create({
-      model: "nvidia/llama-nemotron-embed-vl-1b-v2:free",
+      model: "meta-llama/llama-3.1-8b-instruct:free",
       messages: [
         {
           role: "system",

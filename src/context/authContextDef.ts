@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import type { User, UserProfile } from "../types";
+import type { User, UserProfile, TrainingPlan } from "../types";
 
 export interface AuthContextType {
   user: User | null;
@@ -8,7 +8,6 @@ export interface AuthContextType {
   saveProfile: (
     profile: Omit<UserProfile, "userId" | "updatedAt">,
   ) => Promise<void>;
-  
   generatePlan: () => Promise<void>;
   refreshData: () => Promise<void>;
 }
